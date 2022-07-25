@@ -55,12 +55,10 @@ function createApolloClient(
     link: apolloLink,
     cache: new InMemoryCache({
       typePolicies: {
-        Query: {
-          fields: {
-            hints: relayStylePagination(),
-          },
-        },
-      },
+        PongType: {
+          keyFields: ["uuid"]
+        }
+      }
     }),
   });
 }
