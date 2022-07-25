@@ -1,0 +1,56 @@
+fragment ProjectFragment on ProjectType {
+  uuid
+  projectId
+  name
+  pongCount
+  channelCount
+  pongsStatus
+  pongsStatusTime
+}
+
+fragment MemberFragment on MemberType {
+  id
+  user {
+    id
+    email
+  }
+  level
+  createdDate
+}
+
+fragment TokenFragment on TokenType {
+  id
+  description
+  expires
+  createdDate
+}
+
+query Projects {
+  projects {
+    ...ProjectFragment
+  }
+}
+
+query Project($id: UUID!) {
+  project(id: $id) {
+    ...ProjectFragment
+  }
+}
+
+query ProjectMembers($project: String!) {
+  members(project: $project) {
+    ...MemberFragment
+  }
+}
+
+query ProjectTokens($project: String!) {
+  tokens(project: $project) {
+    ...TokenFragment
+  }
+}
+
+query ProjectChannels($project: String!) {
+  channels(project: $project) {
+    ...ChannelFragment
+  }
+}

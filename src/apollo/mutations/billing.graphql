@@ -1,0 +1,11 @@
+mutation CustomerBillingPortal {
+  billingPortal {
+    url
+  }
+}
+
+mutation CheckoutSessionUrl($plan: Int!) {
+  checkoutSession(plan: $plan) {
+    url
+  }
+}

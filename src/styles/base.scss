@@ -1,0 +1,9 @@
+#nprogress .bar {
+  background: var(--chakra-colors-green-300) !important;
+  height: 0.3rem;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: var(--chakra-colors-green-300) !important;
+  border-left-color: var(--chakra-colors-green-300) !important;
+}

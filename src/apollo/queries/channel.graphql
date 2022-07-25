@@ -1,0 +1,31 @@
+fragment TransportFragment on TransportType {
+  id
+  name
+  description
+  module
+  schema
+  createdDate
+  updatedDate
+}
+
+fragment ChannelFragment on ChannelType {
+  uuid
+  name
+  active
+  default
+  transport {
+    ...TransportFragment
+  }
+  transportSetting
+  sendStatusUp
+  sendStatusDown
+  assignedPongs
+  createdDate
+  updatedDate
+}
+
+query Transports {
+  transports {
+    ...TransportFragment
+  }
+}

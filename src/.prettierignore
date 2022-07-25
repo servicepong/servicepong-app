@@ -1,0 +1,7 @@
+.next
+node_modules
+
+schema.graphql
+graphql.schema.json
+
+apollo/generated/*.ts

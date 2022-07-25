@@ -1,0 +1,67 @@
+fragment AccountErrorFragment on AccountError {
+  field
+  message
+  code
+}
+
+mutation Register($email: String!, $plan: Int) {
+  accountRegister(input: { email: $email, plan: $plan }) {
+    success
+    errors {
+      ...AccountErrorFragment
+    }
+  }
+}
+
+mutation Login($email: String!, $token: String) {
+  login(email: $email, token: $token) {
+    linkSent
+    token
+    csrfToken
+    plan
+    errors {
+      ...AccountErrorFragment
+    }
+  }
+}
+
+mutation Logout {
+  logout {
+    success
+  }
+}
+
+mutation RequestEmailChange($newEmail: String!) {
+  requestEmailChange(newEmail: $newEmail) {
+    success
+    errors {
+      ...AccountErrorFragment
+    }
+  }
+}
+
+mutation ConfirmEmailChange($token: String!) {
+  confirmEmailChange(token: $token) {
+    user {
+      email
+    }
+    errors {
+      ...AccountErrorFragment
+    }
+  }
+}
+
+mutation ChangePassword($newPassword: String!) {
+  passwordChange(newPassword: $newPassword) {
+    success
+    errors {
+      ...AccountErrorFragment
+    }
+  }
+}
+
+mutation DeleteAccount {
+  accountDelete {
+    success
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "components/**/*.tsx",
+    "helper/**/*.tsx",
+    "hooks/**/*.tsx",
+    "pages/**/*.tsx",
+    "uikit/**/*.tsx"
+  ]
+}

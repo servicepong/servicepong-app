@@ -1,0 +1,51 @@
+---
+name: deploy prod
+
+on:
+  workflow_run:
+    workflows: ["docker build"]
+    branches: ["main"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: set short commit sha
+        id: commit_var
+        run: echo "::set-output name=commit_sha::$(git rev-parse --short HEAD)"
+
+      - name: start deployment
+        uses: bobheadxi/deployments@v1
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: main
+
+      - name: run deployment
+        run: |
+          curl -X POST -F token=${{ secrets.DEPLOY_TOKEN }} \
+          -F "ref=master" \
+          -F "variables[IMAGE]=${{ secrets.DEPLOY_REGISTRY }}:sha-${{ steps.commit_var.outputs.commit_sha }}" \
+          -F "variables[PLAYBOOK]=${{ secrets.DEPLOY_PLAYBOOK }}" \
+          -F "variables[INVENTORY]=${{ secrets.DEPLOY_INVENTORY }}" \
+          -F "variables[LIMIT]=${{ secrets.DEPLOY_LIMIT_PROD }}" \
+          -F "variables[TAGS]=${{ secrets.DEPLOY_TAGS }}" \
+          ${{ secrets.DEPLOY_URL }} -o deployment.json
+
+      - name: update deployment status
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          env: ${{ steps.deployment.outputs.env }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}

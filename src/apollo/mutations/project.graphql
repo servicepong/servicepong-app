@@ -1,0 +1,63 @@
+mutation CreateProject($name: String!) {
+  project(input: { name: $name }) {
+    uuid
+    errors {
+      field
+      messages
+    }
+  }
+}
+
+mutation UpdateProject($uuid: String!, $name: String!) {
+  project(input: { uuid: $uuid, name: $name }) {
+    uuid
+    errors {
+      field
+      messages
+    }
+  }
+}
+
+mutation DeleteProject($uuid: UUID!) {
+  projectDelete(uuid: $uuid) {
+    uuid
+  }
+}
+
+mutation CreateProjectMember(
+  $project: UUID!
+  $email: String!
+  $level: MemberLevel!
+) {
+  projectMember(project: $project, email: $email, level: $level) {
+    success
+  }
+}
+
+mutation DeleteProjectMember($project: UUID!, $member: Int!) {
+  projectMemberDelete(project: $project, member: $member) {
+    success
+  }
+}
+
+mutation CreateProjectToken(
+  $project: String!
+  $description: String!
+  $expires: DateTime
+) {
+  projectToken(
+    input: { project: $project, description: $description, expires: $expires }
+  ) {
+    id
+    errors {
+      field
+      messages
+    }
+  }
+}
+
+mutation DeleteProjectToken($project: UUID!, $token: Int!) {
+  projectTokenDelete(project: $project, token: $token) {
+    success
+  }
+}

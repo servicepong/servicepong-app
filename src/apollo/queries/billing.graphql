@@ -1,0 +1,13 @@
+query Invoices {
+  invoices {
+    id
+    number
+    invoicePdf
+    total
+    tax
+    status
+    periodStart
+    periodEnd
+    created
+  }
+}

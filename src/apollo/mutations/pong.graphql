@@ -1,0 +1,58 @@
+mutation CreatePong($project: String!) {
+  pong(input: { project: $project }) {
+    pongId
+    uuid
+    errors {
+      field
+      messages
+    }
+  }
+}
+
+mutation UpdatePongName($uuid: String!, $project: String!, $name: String!) {
+  pong(input: { uuid: $uuid, project: $project, name: $name }) {
+    uuid
+  }
+}
+
+mutation UpdatePongPeriod(
+  $uuid: String!
+  $project: String!
+  $period: String!
+  $gracePeriod: String!
+) {
+  pong(
+    input: {
+      uuid: $uuid
+      project: $project
+      period: $period
+      gracePeriod: $gracePeriod
+    }
+  ) {
+    uuid
+  }
+}
+
+mutation DeletePong($uuid: UUID!) {
+  pongDelete(uuid: $uuid) {
+    uuid
+  }
+}
+
+mutation TransferPong($pong: UUID!, $project: UUID!) {
+  pongTransfer(pong: $pong, project: $project) {
+    success
+  }
+}
+
+mutation PongChannelAdd($pong: UUID!, $channel: UUID!) {
+  pongAddChannel(pong: $pong, channel: $channel) {
+    success
+  }
+}
+
+mutation PongChannelRemove($pong: UUID!, $channel: UUID!) {
+  pongRemoveChannel(pong: $pong, channel: $channel) {
+    success
+  }
+}

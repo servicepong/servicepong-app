@@ -1,0 +1,21 @@
+query Customer {
+  customer {
+    id
+    plan {
+      name
+    }
+    currentPeriodEnd
+    cancelAt
+    usage {
+      id
+      usageMemberLimit
+      usedMemberLimit
+      usagePongLimit
+      usedPongLimit
+      usageSmsLimit
+      usedSmsLimit
+      usageCallLimit
+      usedCallLimit
+    }
+  }
+}

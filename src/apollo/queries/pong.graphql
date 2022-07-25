@@ -1,0 +1,48 @@
+fragment PongBase on PongType {
+  uuid
+  pongId
+  name
+  pingUrl
+  period
+  gracePeriod
+  lastPing
+  lastStatus
+  duration
+}
+
+fragment PongLogFragment on PongLogType {
+  id
+  remoteIp
+  scheme
+  requestMethod
+  userAgent
+  body
+  exitStatus
+  createdDate
+  updatedDate
+}
+
+query Pongs($project: UUID!) {
+  pongs(first: 20, project: $project) {
+    edges {
+      node {
+        ...PongBase
+        channels {
+          ...ChannelFragment
+        }
+      }
+    }
+  }
+}
+
+query Pong($id: UUID!, $project: UUID!) {
+  pong(id: $id, project: $project) {
+    ...PongBase
+    channels {
+      ...ChannelFragment
+    }
+    logs {
+      ...PongLogFragment
+    }
+  }
+}

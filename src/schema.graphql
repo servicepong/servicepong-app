@@ -1,0 +1,506 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AccountDeleteMutation {
+  success: Boolean
+}
+
+type AccountError {
+  field: String
+  message: String
+  code: AccountErrorCode!
+}
+
+enum AccountErrorCode {
+  ACTIVATE_OWN_ACCOUNT
+  ACTIVATE_SUPERUSER_ACCOUNT
+  DUPLICATED_INPUT_ITEM
+  DEACTIVATE_OWN_ACCOUNT
+  DEACTIVATE_SUPERUSER_ACCOUNT
+  DELETE_NON_STAFF_USER
+  DELETE_OWN_ACCOUNT
+  DELETE_STAFF_ACCOUNT
+  DELETE_SUPERUSER_ACCOUNT
+  GRAPHQL_ERROR
+  INACTIVE
+  INVALID
+  INVALID_PASSWORD
+  LEFT_NOT_MANAGEABLE_PERMISSION
+  INVALID_CREDENTIALS
+  NOT_FOUND
+  OUT_OF_SCOPE_USER
+  OUT_OF_SCOPE_GROUP
+  OUT_OF_SCOPE_PERMISSION
+  PASSWORD_ENTIRELY_NUMERIC
+  PASSWORD_TOO_COMMON
+  PASSWORD_TOO_SHORT
+  PASSWORD_TOO_SIMILAR
+  REQUIRED
+  UNIQUE
+  JWT_SIGNATURE_EXPIRED
+  JWT_INVALID_TOKEN
+  JWT_DECODE_ERROR
+  JWT_MISSING_TOKEN
+  JWT_INVALID_CSRF_TOKEN
+  ACCOUNT_NOT_CONFIRMED
+  MAGIC_LINK_ALREADY_SENT
+}
+
+type AccountLogoutMutation {
+  success: Boolean
+}
+
+type AccountRegister {
+  success: Boolean
+  errors: [AccountError!]!
+}
+
+input AccountRegisterInput {
+  email: String!
+  plan: Int
+}
+
+type BillingPortalMutation {
+  url: String!
+}
+
+type ChannelDeleteMutation {
+  uuid: UUID!
+}
+
+input ChannelMutationInput {
+  uuid: String
+  project: String!
+  transport: String!
+  transportSetting: JSONString!
+  name: String!
+  default: Boolean
+  active: Boolean
+  sendStatusUp: Boolean
+  sendStatusDown: Boolean
+  clientMutationId: String
+}
+
+type ChannelMutationPayload {
+  uuid: String
+  url: String
+  project: String
+  transport: String
+  transportSetting: JSONString
+  name: String
+  default: Boolean
+  active: Boolean
+  sendStatusUp: Boolean
+  sendStatusDown: Boolean
+  createdDate: DateTime
+  updatedDate: DateTime
+  errors: [ErrorType]
+  clientMutationId: String
+}
+
+type ChannelType {
+  createdDate: DateTime!
+  updatedDate: DateTime!
+  uuid: UUID!
+  transport: TransportType!
+  transportSetting: JSONString!
+  name: String!
+  default: Boolean!
+  active: Boolean!
+  sendStatusUp: Boolean!
+  sendStatusDown: Boolean!
+  assignedPongs: Int!
+}
+
+type CheckoutSessionMutation {
+  url: String!
+}
+
+type ConfirmEmailChange {
+  user: UserType
+  errors: [AccountError!]!
+}
+
+type CustomerType {
+  id: ID!
+  createdDate: DateTime!
+  updatedDate: DateTime
+  user: UserType!
+  referenceId: String
+  subscriptionId: String
+  currentPeriodEnd: DateTime
+  cancelAt: DateTime
+  canceledAt: DateTime
+  plan: PlanType
+  usage: UsageType
+}
+
+scalar DateTime
+
+type ErrorType {
+  field: String!
+  messages: [String!]!
+}
+
+type InvoiceType {
+  id: String!
+  number: String!
+  invoicePdf: String!
+  total: String!
+  tax: String!
+  status: String!
+  created: DateTime!
+  periodStart: DateTime!
+  periodEnd: DateTime!
+}
+
+scalar JSONString
+
+type Login {
+  linkSent: Boolean
+  token: String
+  csrfToken: String
+  plan: Int
+  errors: [AccountError!]!
+}
+
+enum MemberLevel {
+  REGULAR
+  MEMBER
+  ADMIN
+}
+
+type MemberType {
+  id: Int!
+  createdDate: DateTime!
+  user: UserType!
+  project: ProjectType!
+  level: MemberLevel!
+}
+
+type Mutation {
+  project(input: ProjectMutationInput!): ProjectMutationPayload
+  projectDelete(uuid: UUID!): ProjectDeleteMutation
+  projectMember(email: String!, level: MemberLevel!, project: UUID!): ProjectMemberMutation
+  projectMemberDelete(member: Int!, project: UUID!): ProjectMemberDeleteMutation
+  projectToken(input: ProjectTokenMutationInput!): ProjectTokenMutationPayload
+  projectTokenDelete(project: UUID!, token: Int!): ProjectTokenDeleteMutation
+  pong(input: PongMutationInput!): PongMutationPayload
+  pongDelete(uuid: UUID!): PongDeleteMutation
+  pongTransfer(pong: UUID!, project: UUID!): PongTransferMutation
+  pongAddChannel(channel: UUID!, pong: UUID!): PongAddChannelMutation
+  pongRemoveChannel(channel: UUID!, pong: UUID!): PongRemoveChannelMutation
+  channel(input: ChannelMutationInput!): ChannelMutationPayload
+  channelDelete(uuid: UUID!): ChannelDeleteMutation
+  billingPortal: BillingPortalMutation
+  checkoutSession(plan: Int!): CheckoutSessionMutation
+  accountRegister(input: AccountRegisterInput!): AccountRegister
+  login(email: String!, token: String): Login
+  logout: AccountLogoutMutation
+  passwordChange(newPassword: String!): PasswordChange
+  accountDelete: AccountDeleteMutation
+  requestEmailChange(newEmail: String!): RequestEmailChange
+  confirmEmailChange(token: String!): ConfirmEmailChange
+}
+
+interface Node {
+  id: ID!
+}
+
+type NotificationLogType {
+  createdDate: DateTime!
+  uuid: UUID!
+  pong: PongType!
+  channel: ChannelType!
+  statusCode: Int
+  response: String
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type PasswordChange {
+  success: Boolean
+  errors: [AccountError!]!
+}
+
+enum PlanInterval {
+  MONTH
+  YEAR
+}
+
+type PlanType {
+  id: ID!
+  createdDate: DateTime!
+  updatedDate: DateTime
+  name: String!
+  interval: PlanInterval!
+  referenceId: String
+  active: Boolean!
+  default: Boolean!
+  usageMemberLimit: Int!
+  usagePongLimit: Int!
+  usageLogLimit: Int!
+  usageSmsLimit: Int!
+  usageCallLimit: Int!
+}
+
+type PongAddChannelMutation {
+  success: Boolean
+}
+
+type PongDeleteMutation {
+  uuid: UUID
+}
+
+type PongLogType {
+  createdDate: DateTime!
+  id: Int!
+  remoteIp: String!
+  scheme: String
+  requestMethod: String
+  userAgent: String
+  body: JSONString!
+  exitStatus: Int
+  updatedDate: DateTime
+}
+
+input PongMutationInput {
+  uuid: String
+  project: String!
+  name: String
+  description: String
+  slug: String
+  paused: Boolean
+  period: String
+  gracePeriod: String
+  channels: String
+  clientMutationId: String
+}
+
+type PongMutationPayload {
+  uuid: String
+  pongId: Int
+  url: String
+  project: String
+  name: String
+  description: String
+  slug: String
+  paused: Boolean
+  period: String
+  gracePeriod: String
+  channels: String
+  createdDate: DateTime
+  updatedDate: DateTime
+  errors: [ErrorType]
+  clientMutationId: String
+}
+
+type PongRemoveChannelMutation {
+  success: Boolean
+}
+
+type PongTransferMutation {
+  success: Boolean
+}
+
+type PongType implements Node {
+  createdDate: DateTime!
+  updatedDate: DateTime
+  uuid: UUID!
+  pongId: Int!
+  project: ProjectType!
+  name: String!
+  slug: String
+  paused: Boolean
+  period: String
+  gracePeriod: String
+  channels: [ChannelType]
+  logs: [PongLogType]
+  id: ID!
+  pingUrl: String
+  lastPing: DateTime
+  lastStatus: Boolean
+  duration: String
+}
+
+type PongTypeConnection {
+  pageInfo: PageInfo!
+  edges: [PongTypeEdge]!
+}
+
+type PongTypeEdge {
+  node: PongType
+  cursor: String!
+}
+
+type ProjectDeleteMutation {
+  uuid: UUID!
+}
+
+type ProjectMemberDeleteMutation {
+  success: Boolean
+}
+
+type ProjectMemberMutation {
+  success: Boolean
+}
+
+input ProjectMutationInput {
+  uuid: String
+  name: String!
+  clientMutationId: String
+}
+
+type ProjectMutationPayload {
+  uuid: String
+  projectId: Int
+  url: String
+  name: String
+  owner: String
+  createdDate: DateTime
+  updatedDate: DateTime
+  errors: [ErrorType]
+  clientMutationId: String
+}
+
+type ProjectTokenDeleteMutation {
+  success: Boolean
+}
+
+input ProjectTokenMutationInput {
+  id: Int
+  project: String!
+  expires: DateTime
+  description: String!
+  clientMutationId: String
+}
+
+type ProjectTokenMutationPayload {
+  id: Int
+  url: String
+  project: String
+  expires: DateTime
+  description: String
+  createdDate: DateTime
+  updatedDate: DateTime
+  errors: [ErrorType]
+  clientMutationId: String
+}
+
+type ProjectType {
+  createdDate: DateTime!
+  updatedDate: DateTime!
+  uuid: UUID!
+  projectId: Int!
+  owner: UserType!
+  name: String
+  channels: [ChannelType]
+  pongCount: Int!
+  channelCount: Int!
+  pongsStatus: Boolean
+  pongsStatusTime: DateTime
+}
+
+type Query {
+  project(id: UUID!): ProjectType
+  projects(uuid: String, name: String): [ProjectType!]
+  members(user: String, project: String, level: String): [MemberType!]
+  tokens(project: String): [TokenType!]
+  pong(id: UUID!, project: UUID!): PongType
+  pongs(offset: Int, before: String, after: String, first: Int, last: Int, project: UUID): PongTypeConnection
+  status(id: Int!): StatusType
+  statuses(id: Int, pong: String, old: String, new: String, log: String, processed: Boolean): [StatusType!]
+  pongLog(id: Int!): PongLogType
+  pongLogs(id: Int, pong: String, remoteIp: String, scheme: String, requestMethod: String, userAgent: String, exitStatus: Int): [PongLogType!]
+  transport(id: Int!): TransportType
+  transports(name: String, module: String, active: Boolean): [TransportType!]
+  channel(id: Int!): ChannelType
+  channels(uuid: String, project: String, transport: String, default: Boolean, active: Boolean): [ChannelType!]
+  notificationLog(id: Int!): NotificationLogType
+  notificationLogs(uuid: String, pong: String, channel: String, statusCode: Int): [NotificationLogType!]
+  plan(id: Int!): PlanType
+  plans(name: String, active: Boolean, default: Boolean): [PlanType!]
+  usage(id: Int!): UsageType
+  usages(customer: String): [UsageType!]
+  customer: CustomerType
+  customers(user: String, referenceId: String): [CustomerType!]
+  invoices: [InvoiceType]
+  me: UserType
+  user(id: Int!): UserType
+  users(email: String, firstName: String, lastName: String, isStaff: Boolean, isActive: Boolean): [UserType!]
+}
+
+type RequestEmailChange {
+  success: Boolean
+  errors: [AccountError!]!
+}
+
+enum StateType {
+  ADDED
+  UP
+  START
+  DOWN
+  PAUSED
+}
+
+type StatusType {
+  createdDate: DateTime!
+  updatedDate: DateTime
+  id: Int!
+  old: StateType!
+  new: StateType!
+  duration: String
+  processed: Boolean!
+}
+
+type TokenType {
+  createdDate: DateTime!
+  id: Int!
+  project: ProjectType!
+  expires: DateTime
+  key: String!
+  description: String
+}
+
+type TransportType {
+  id: ID!
+  createdDate: DateTime!
+  updatedDate: DateTime
+  name: String!
+  module: String!
+  description: String
+  schema: JSONString
+}
+
+scalar UUID
+
+type UsageType {
+  id: ID!
+  createdDate: DateTime!
+  updatedDate: DateTime
+  usageMemberLimit: Int!
+  usagePongLimit: Int!
+  usageLogLimit: Int!
+  usageSmsLimit: Int!
+  usageCallLimit: Int!
+  usedMemberLimit: Int!
+  usedPongLimit: Int!
+  usedSmsLimit: Int!
+  usedCallLimit: Int!
+  usedLogLimit: Int!
+}
+
+type UserType {
+  id: ID!
+  lastLogin: DateTime
+  isActive: Boolean!
+  dateJoined: DateTime!
+  email: String!
+}
