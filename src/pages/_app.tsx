@@ -36,7 +36,7 @@ const ServicePongApp = ({
 
   const config = {
     initialColorMode: 'dark',
-    useSystemColorMode: true,
+    useSystemColorMode: false,
   };
 
   const theme = extendTheme({ config });
