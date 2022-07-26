@@ -87,7 +87,7 @@ const ScheduleInput: FC<ScheduleInputProps> = ({
             </NumberInputStepper>
           </NumberInput>
           <Select
-            defaultValue={unit}
+            value={unit}
             onChange={(e) => setUnit(e.currentTarget.value)}
           >
             {options.map((opt, index) => (
