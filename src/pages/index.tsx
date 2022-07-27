@@ -1,18 +1,30 @@
 import {useState} from "react";
-import type { GetServerSideProps, NextPage } from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Link from 'next/link';
-import { NextSeo } from 'next-seo';
-import {AddIcon } from '@chakra-ui/icons';
-import {Button, ButtonGroup, Flex, Grid, GridItem, Heading, Icon, IconButton, Input, Text} from '@chakra-ui/react';
-import { addApolloState, initializeApollo } from 'apollo/client';
-import { AddProjectCard } from 'components/index';
+import {NextSeo} from 'next-seo';
+import {AddIcon} from '@chakra-ui/icons';
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Icon,
+  IconButton,
+  Input,
+  Table, Tbody, Td,
+  Text, Th, Thead, Tr
+} from '@chakra-ui/react';
+import {addApolloState, initializeApollo} from 'apollo/client';
+import {AddProjectCard} from 'components/index';
 
-import { route } from '@helper/routes';
-import { useProject } from '@hooks/useProject';
+import {route} from '@helper/routes';
+import {useProject} from '@hooks/useProject';
 import IconListView from '@icons/list-view.svg';
 import IconTileView from '@icons/tile.svg';
-import { ProjectCard, Section } from '@uikit/components';
-import { Base } from '@uikit/layouts';
+import {ProjectCard, Section, StatusBadge} from '@uikit/components';
+import {Base} from '@uikit/layouts';
 
 enum View {
   Tile,
@@ -20,56 +32,110 @@ enum View {
 }
 
 const IndexPage: NextPage = () => {
-  const { projects } = useProject();
+  const {projects} = useProject();
   const [view, setView] = useState<View>(View.Tile);
 
   return (
     <>
-      <NextSeo title="Projects" />
+      <NextSeo title="Projects"/>
       <Base>
         <Section>
           <Flex justifyContent={"space-between"}>
             <Heading>Projects</Heading>
             <Flex alignItems={"center"} gap={4}>
               <Text>Search</Text>
-              <Input placeholder={"Enter a project name"} variant={"filled"} w={"200px"} type={"search"} />
+              <Input placeholder={"Enter a project name"} variant={"filled"} w={"200px"} type={"search"}/>
               <Text>View</Text>
               <ButtonGroup isAttached>
-                <IconButton onClick={() => setView(View.Tile)} colorScheme={view === View.Tile ? 'green' : 'gray'} aria-label='Search database' icon={<Icon as={IconTileView} />} />
-                <IconButton onClick={() => setView(View.List)} colorScheme={view === View.List ? 'green' : 'gray'} aria-label='Search database' icon={<Icon as={IconListView} />} />
+                <IconButton onClick={() => setView(View.Tile)} colorScheme={view === View.Tile ? 'green' : 'gray'}
+                            aria-label='Search database' icon={<Icon as={IconTileView}/>}/>
+                <IconButton onClick={() => setView(View.List)} colorScheme={view === View.List ? 'green' : 'gray'}
+                            aria-label='Search database' icon={<Icon as={IconListView}/>}/>
               </ButtonGroup>
-              <Button leftIcon={<Icon as={AddIcon} />}>New Project</Button>
+              <Button leftIcon={<Icon as={AddIcon}/>}>New Project</Button>
             </Flex>
           </Flex>
-          <Grid mt={7} templateColumns="repeat(12, 1fr)" gap={6}>
-            {projects &&
-              projects.data?.projects?.map((project) => (
-                <GridItem
-                  key={project.uuid}
-                  colSpan={{ base: 12, md: 6, lg: 3 }}
-                >
-                  <Link href={route.projectPongs(project.uuid)} passHref={true}>
-                    <a>
-                      <ProjectCard
-                        title={project.name || ''}
-                        countPong={project.pongCount}
-                        countIntegration={project.channelCount}
-                        status={{ success: project.pongsStatus }}
-                      />
-                    </a>
-                  </Link>
-                </GridItem>
-              ))}
+          {view === View.Tile ? (
+            <Grid mt={7} templateColumns="repeat(12, 1fr)" gap={6}>
+              {projects &&
+                projects.data?.projects?.map((project) => (
+                  <GridItem
+                    key={project.uuid}
+                    colSpan={{base: 12, md: 6, lg: 3}}
+                  >
+                    <Link href={route.projectPongs(project.uuid)} passHref={true}>
+                      <a>
+                        <ProjectCard
+                          title={project.name || ''}
+                          countPong={project.pongCount}
+                          countIntegration={project.channelCount}
+                          status={{success: project.pongsStatus}}
+                        />
+                      </a>
+                    </Link>
+                  </GridItem>
+                ))}
 
-            <AddProjectCard />
-          </Grid>
+              <AddProjectCard/>
+            </Grid>
+          ) : (
+            <Table mt={7}>
+              <Thead>
+                <Tr>
+                  <Th>
+                    #
+                  </Th>
+                  <Th>
+                    Status
+                  </Th>
+                  <Th>
+                    Name
+                  </Th>
+                  <Th>
+                    Pongs
+                  </Th>
+                  <Th>
+                    Integrations
+                  </Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {projects &&
+                  projects.data?.projects?.map((project) => (
+                    <Tr key={project.uuid}>
+                      <Td title={project.uuid}>
+                        {project.uuid.substr(0, 5)}…
+                      </Td>
+                      <Td>
+                        <StatusBadge status={project.pongsStatus}/>
+                      </Td>
+                      <Td>
+                        {project.name}
+                      </Td>
+                      <Td>
+                        {project.pongCount}
+                      </Td>
+                      <Td>
+                        {project.channelCount}
+                      </Td>
+                      <Td>
+                        <Link href={route.projectPongs(project.uuid)} passHref={true}>
+                          <Button as={"a"} size={"sm"}>Details</Button>
+                        </Link>
+                      </Td>
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          )}
         </Section>
       </Base>
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({req}) => {
   const apolloClient = initializeApollo(req.cookies.token);
 
   return addApolloState(apolloClient, {
