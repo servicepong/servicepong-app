@@ -1,24 +1,47 @@
+import {useState} from "react";
 import type { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
-import { Grid, GridItem } from '@chakra-ui/react';
+import {AddIcon } from '@chakra-ui/icons';
+import {Button, ButtonGroup, Flex, Grid, GridItem, Heading, Icon, IconButton, Input, Text} from '@chakra-ui/react';
 import { addApolloState, initializeApollo } from 'apollo/client';
 import { AddProjectCard } from 'components/index';
 
 import { route } from '@helper/routes';
 import { useProject } from '@hooks/useProject';
+import IconListView from '@icons/list-view.svg';
+import IconTileView from '@icons/tile.svg';
 import { ProjectCard, Section } from '@uikit/components';
 import { Base } from '@uikit/layouts';
 
+enum View {
+  Tile,
+  List
+}
+
 const IndexPage: NextPage = () => {
   const { projects } = useProject();
+  const [view, setView] = useState<View>(View.Tile);
 
   return (
     <>
       <NextSeo title="Projects" />
       <Base>
         <Section>
-          <Grid templateColumns="repeat(12, 1fr)" gap={6}>
+          <Flex justifyContent={"space-between"}>
+            <Heading>Projects</Heading>
+            <Flex alignItems={"center"} gap={4}>
+              <Text>Search</Text>
+              <Input placeholder={"Enter a project name"} variant={"filled"} w={"200px"} type={"search"} />
+              <Text>View</Text>
+              <ButtonGroup isAttached>
+                <IconButton onClick={() => setView(View.Tile)} colorScheme={view === View.Tile ? 'green' : 'gray'} aria-label='Search database' icon={<Icon as={IconTileView} />} />
+                <IconButton onClick={() => setView(View.List)} colorScheme={view === View.List ? 'green' : 'gray'} aria-label='Search database' icon={<Icon as={IconListView} />} />
+              </ButtonGroup>
+              <Button leftIcon={<Icon as={AddIcon} />}>New Project</Button>
+            </Flex>
+          </Flex>
+          <Grid mt={7} templateColumns="repeat(12, 1fr)" gap={6}>
             {projects &&
               projects.data?.projects?.map((project) => (
                 <GridItem
