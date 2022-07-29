@@ -1,5 +1,9 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
-import { ProjectsQuery, ProjectType, useProjectsQuery } from 'apollo/generated/types';
+import {
+  ProjectsQuery,
+  ProjectType,
+  useProjectsQuery,
+} from 'apollo/generated/types';
 
 interface ProjectContextInterface {
   projects: ProjectsQuery | undefined;
@@ -30,33 +34,34 @@ export const ProjectProvider: FC<ProjectProviderInterface> = ({
   );
 };
 
-const useProvideProject = (
-  projectId: string | null
-) => {
+const useProvideProject = (projectId: string | null) => {
   const { refetch, data } = useProjectsQuery();
-  const [projectsState, setProjectsState] = useState<ProjectsQuery | undefined>(data);
+  const [projectsState, setProjectsState] = useState<ProjectsQuery | undefined>(
+    data
+  );
 
   const refetchProjects = async () => {
     const d = await refetch();
     setProjectsState(d.data);
-  }
+  };
 
   const currentProject = data?.projects?.find(
     (project) => project.uuid === projectId
   ) as ProjectType;
 
-
   const search = (value: string) => {
-    const p = data?.projects?.filter((item) => item.name!.toLowerCase().indexOf(value.toLowerCase()) > -1);
+    const p = data?.projects?.filter(
+      (item) => item.name!.toLowerCase().indexOf(value.toLowerCase()) > -1
+    );
 
-    setProjectsState((oldstate) => ({ ...oldstate,  projects: p  }));
-  }
+    setProjectsState((oldstate) => ({ ...oldstate, projects: p }));
+  };
 
   return {
     currentProject,
-    projects: projectsState || data,
+    projects: projectsState || data,
     search,
-    refetch: refetchProjects
+    refetch: refetchProjects,
   };
 };
 

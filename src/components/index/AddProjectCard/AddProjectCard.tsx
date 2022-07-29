@@ -1,16 +1,12 @@
 import { AddIcon } from '@chakra-ui/icons';
-import {
-  Flex,
-  GridItem,
-  Heading,
-} from '@chakra-ui/react';
+import { Flex, GridItem, Heading } from '@chakra-ui/react';
 
 import { useModal } from '@hooks/useModal';
 import { Card } from '@uikit/components';
+
 import { AddProjectModal } from '../AddProjectModal';
 
 const AddProjectCard = () => {
-
   const { setModalData } = useModal();
 
   return (
@@ -20,9 +16,7 @@ const AddProjectCard = () => {
         onClick={() =>
           setModalData({
             title: 'New Project',
-            content: (
-              <AddProjectModal />
-            ),
+            content: <AddProjectModal />,
           })
         }
         _hover={{ cursor: 'pointer' }}
@@ -42,6 +36,5 @@ const AddProjectCard = () => {
     </GridItem>
   );
 };
-
 
 export { AddProjectCard };

@@ -55,9 +55,9 @@ function createApolloClient(
     cache: new InMemoryCache({
       typePolicies: {
         PongType: {
-          keyFields: ["uuid"]
-        }
-      }
+          keyFields: ['uuid'],
+        },
+      },
     }),
   });
 }
