@@ -11,6 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import {
+  PongsDocument,
   useDeletePongMutation,
   usePongQuery,
   useProjectsQuery,
@@ -47,6 +48,7 @@ const TabDangerZone: FC<TabDangerZoneProps> = ({ projectId, pongId }) => {
           pong: pongId,
           project: transferProjectId,
         },
+        refetchQueries: [PongsDocument],
         onError: (error) => console.error(error),
         onCompleted: (data) => {
           if (data.pongTransfer?.success) {
@@ -67,6 +69,7 @@ const TabDangerZone: FC<TabDangerZoneProps> = ({ projectId, pongId }) => {
   const deletePong = () => {
     deletePongMutation({
       variables: { uuid: pongId },
+      refetchQueries: [PongsDocument],
       onError: (error) => console.error(error),
       onCompleted: (data) => {
         if (data?.pongDelete?.uuid) {
