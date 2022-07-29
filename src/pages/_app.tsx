@@ -97,7 +97,7 @@ const ServicePongApp = ({
       <ApolloProvider client={client}>
         <ChakraProvider theme={theme}>
           <AuthProvider>
-            <ProjectProvider projects={projects} projectId={projectId}>
+            <ProjectProvider projectId={projectId}>
               <ModalProvider>
                 <ConfirmModalProvider>
                   <Component {...pageProps} />

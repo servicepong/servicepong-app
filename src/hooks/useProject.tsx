@@ -1,9 +1,15 @@
-import { createContext, FC, ReactNode, useContext } from 'react';
-import { ProjectsQueryResult, ProjectType } from 'apollo/generated/types';
+import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import {
+  ProjectsQuery,
+  ProjectType,
+  useProjectsQuery,
+} from 'apollo/generated/types';
 
 interface ProjectContextInterface {
-  projects: ProjectsQueryResult | null;
+  projects: ProjectsQuery | undefined;
   currentProject: ProjectType;
+  search: (value: string) => void;
+  refetch: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextInterface | undefined>(
@@ -12,16 +18,14 @@ const ProjectContext = createContext<ProjectContextInterface | undefined>(
 
 interface ProjectProviderInterface {
   children: ReactNode;
-  projects: ProjectsQueryResult;
   projectId: string | null;
 }
 
 export const ProjectProvider: FC<ProjectProviderInterface> = ({
   children,
-  projects,
   projectId,
 }) => {
-  const context = useProvideProject(projects, projectId);
+  const context = useProvideProject(projectId);
 
   return (
     <ProjectContext.Provider value={context}>
@@ -30,17 +34,34 @@ export const ProjectProvider: FC<ProjectProviderInterface> = ({
   );
 };
 
-const useProvideProject = (
-  projects: ProjectsQueryResult | null,
-  projectId: string | null
-) => {
-  const currentProject = projects?.data?.projects?.find(
+const useProvideProject = (projectId: string | null) => {
+  const { refetch, data } = useProjectsQuery();
+  const [projectsState, setProjectsState] = useState<ProjectsQuery | undefined>(
+    data
+  );
+
+  const refetchProjects = async () => {
+    const d = await refetch();
+    setProjectsState(d.data);
+  };
+
+  const currentProject = data?.projects?.find(
     (project) => project.uuid === projectId
   ) as ProjectType;
 
+  const search = (value: string) => {
+    const p = data?.projects?.filter(
+      (item) => item.name!.toLowerCase().indexOf(value.toLowerCase()) > -1
+    );
+
+    setProjectsState((oldstate) => ({ ...oldstate, projects: p }));
+  };
+
   return {
     currentProject,
-    projects,
+    projects: projectsState || data,
+    search,
+    refetch: refetchProjects,
   };
 };
 

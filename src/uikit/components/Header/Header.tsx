@@ -216,8 +216,8 @@ const LogoComponent: FC = () => {
             value={currentProject.uuid}
             onChange={(e) => push(route.projectPongs(e.currentTarget.value))}
           >
-            {projects?.data?.projects &&
-              projects.data.projects.map((project) => (
+            {projects?.projects &&
+              projects.projects.map((project) => (
                 <option key={project.uuid} value={project.uuid}>
                   {project.name}
                 </option>
