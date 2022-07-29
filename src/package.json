@@ -42,7 +42,8 @@
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
     "react-time-ago": "^7.2.1",
-    "sass": "^1.53.0"
+    "sass": "^1.53.0",
+    "usehooks-ts": "^2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

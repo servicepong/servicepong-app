@@ -28,7 +28,7 @@ export const ProjectCard: FC<ProjectCardProps> = ({
   status,
 }) => {
   return (
-    <Card>
+    <Card height="100%">
       <Heading as="h3" size="md" mb={3}>
         {title}
       </Heading>
