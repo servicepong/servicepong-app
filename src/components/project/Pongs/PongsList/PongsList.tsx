@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { AddIcon } from '@chakra-ui/icons';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import {
+  PongsDocument,
   ProjectQuery,
   useCreatePongMutation,
   usePongsQuery,
@@ -27,6 +28,7 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
   const createPong = () => {
     createPongMutation({
       variables: { project: projectId },
+      refetchQueries: [PongsDocument],
       onError: (error) => {
         // @TODO error handling
         console.error(error);
