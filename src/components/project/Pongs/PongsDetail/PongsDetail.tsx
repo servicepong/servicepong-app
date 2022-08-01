@@ -7,6 +7,7 @@ import {
   EditableInput,
   EditablePreview,
   Flex,
+  HStack,
   Tab,
   TabList,
   TabPanel,
@@ -83,7 +84,10 @@ const PongsDetail: FC<PongsDetailProps> = ({ projectId, pongId }) => {
                 }
               />
             </Editable>
-            <Badge>{`#${data?.pong?.pongId}`}</Badge>
+            <HStack>
+              <Badge>{`#${data?.pong?.pongId}`}</Badge>
+              <Badge>Ping @TODO</Badge>
+            </HStack>
           </Flex>
         </Flex>
 

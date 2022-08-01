@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
-import { AddIcon } from '@chakra-ui/icons';
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { Box, Button, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import {
   PongsDocument,
   ProjectQuery,
@@ -25,9 +25,12 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
   const { data } = usePongsQuery({ variables: { project: projectId } });
   const [createPongMutation] = useCreatePongMutation();
 
-  const createPong = () => {
+  const createPong = (type: "ssl" | "http" | "ping" | "heartbeat" = "heartbeat") => {
     createPongMutation({
-      variables: { project: projectId },
+      variables: {
+        project: projectId,
+        // foo: type
+      },
       refetchQueries: [PongsDocument],
       onError: (error) => {
         // @TODO error handling
@@ -62,30 +65,114 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
               <Heading as="h2" size="lg" mb={8}>
                 {`${project?.project?.pongCount} Pongs`}
               </Heading>
-              <Button
-                onClick={() => createPong()}
-                colorScheme="green"
-                leftIcon={<AddIcon />}
-              >
-                Create pong
-              </Button>
+              <Menu>
+                <MenuButton
+                  colorScheme="green"
+                  size="lg"
+                  as={Button}
+                  leftIcon={<AddIcon />}
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  Create pong
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => createPong("ping")}>
+                    <Box>
+                      <strong>Ping</strong>
+                      <br />
+                      <Text fontSize="xs">
+                        Monitor your servers to be informed in case of an outage
+                      </Text>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem onClick={() => createPong("http")}>
+                    <Box>
+                      <strong>HTTP</strong>
+                      <br />
+                      <Text fontSize="xs">
+                        Monitor your website to be informed in case of an outage
+                      </Text>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem onClick={() => createPong("ssl")}>
+                    <Box>
+                      <strong>SSL</strong>
+                      <br />
+                      <Text fontSize="xs">
+                        Monitor your cron jobs eg. to ensure the creation of backups
+                      </Text>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem onClick={() => createPong("heartbeat")}>
+                    <Box>
+                      <strong>Heartbeat</strong>
+                      <br />
+                      <Text fontSize="xs">
+                        Monitor your cron jobs eg. to ensure the creation of backups
+                      </Text>
+                    </Box>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </Flex>
-
             <PongsTable projectId={projectId} data={data} />
           </>
         ) : (
-          <EmptyMessage
-            button={
-              <Button
-                onClick={() => createPong()}
-                colorScheme="green"
-                size="lg"
-                leftIcon={<AddIcon />}
-              >
-                Create pong
-              </Button>
-            }
-          />
+          <>
+            <EmptyMessage
+              button={
+                <Menu>
+                  <MenuButton
+                    colorScheme="green"
+                    size="lg"
+                    as={Button}
+                    leftIcon={<AddIcon />}
+                    rightIcon={<ChevronDownIcon />}
+                  >
+                    Create pong
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem onClick={() => createPong("ping")}>
+                      <Box>
+                        <strong>Ping</strong>
+                        <br />
+                        <Text fontSize="xs">
+                          Monitor your servers to be informed in case of an outage
+                        </Text>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem onClick={() => createPong("http")}>
+                      <Box>
+                        <strong>HTTP</strong>
+                        <br />
+                        <Text fontSize="xs">
+                          Monitor your website to be informed in case of an outage
+                        </Text>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem onClick={() => createPong("ssl")}>
+                      <Box>
+                        <strong>SSL</strong>
+                        <br />
+                        <Text fontSize="xs">
+                          Monitor your cron jobs eg. to ensure the creation of backups
+                        </Text>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem onClick={() => createPong("heartbeat")}>
+                      <Box>
+                        <strong>Heartbeat</strong>
+                        <br />
+                        <Text fontSize="xs">
+                          Monitor your cron jobs eg. to ensure the creation of backups
+                        </Text>
+                      </Box>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              }
+            />
+          </>
         )}
       </Section>
     </>
