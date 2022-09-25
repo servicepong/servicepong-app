@@ -7,6 +7,7 @@ import {
   EditableInput,
   EditablePreview,
   Flex,
+  HStack,
   Tab,
   TabList,
   TabPanel,
@@ -41,11 +42,16 @@ const PongsDetail: FC<PongsDetailProps> = ({ projectId, pongId }) => {
   const [updatePongNameMutation] = useUpdatePongNameMutation();
 
   const changeName = (name: string) => {
-    if (name && name !== data?.pong?.name) {
+    if (
+      name &&
+      name !== data?.pong?.name &&
+      data?.pong?.pongVariant !== undefined
+    ) {
       updatePongNameMutation({
         variables: {
           uuid: pongId,
           project: projectId,
+          variant: data?.pong?.pongVariant,
           name,
         },
         onError: (error) => console.error(error),
@@ -83,7 +89,10 @@ const PongsDetail: FC<PongsDetailProps> = ({ projectId, pongId }) => {
                 }
               />
             </Editable>
-            <Badge>{`#${data?.pong?.pongId}`}</Badge>
+            <HStack>
+              <Badge>{`#${data?.pong?.pongId}`}</Badge>
+              <Badge>{`${data?.pong?.pongVariant}`}</Badge>
+            </HStack>
           </Flex>
         </Flex>
 
