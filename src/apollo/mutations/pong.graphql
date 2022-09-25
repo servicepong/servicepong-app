@@ -1,5 +1,5 @@
-mutation CreatePong($project: String!) {
-  pong(input: { project: $project }) {
+mutation CreatePong($project: String!, $variant: String!) {
+  pong(input: { project: $project, variant: $variant }) {
     pongId
     uuid
     errors {
@@ -9,8 +9,15 @@ mutation CreatePong($project: String!) {
   }
 }
 
-mutation UpdatePongName($uuid: String!, $project: String!, $name: String!) {
-  pong(input: { uuid: $uuid, project: $project, name: $name }) {
+mutation UpdatePongName(
+  $uuid: String!
+  $project: String!
+  $variant: String!
+  $name: String!
+) {
+  pong(
+    input: { uuid: $uuid, project: $project, variant: $variant, name: $name }
+  ) {
     uuid
   }
 }
@@ -18,6 +25,7 @@ mutation UpdatePongName($uuid: String!, $project: String!, $name: String!) {
 mutation UpdatePongPeriod(
   $uuid: String!
   $project: String!
+  $variant: String!
   $period: String!
   $gracePeriod: String!
 ) {
@@ -25,6 +33,7 @@ mutation UpdatePongPeriod(
     input: {
       uuid: $uuid
       project: $project
+      variant: $variant
       period: $period
       gracePeriod: $gracePeriod
     }

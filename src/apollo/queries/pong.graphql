@@ -1,6 +1,7 @@
 fragment PongBase on PongType {
   uuid
   pongId
+  pongVariant
   name
   pingUrl
   period

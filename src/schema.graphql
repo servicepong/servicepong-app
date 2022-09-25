@@ -262,17 +262,22 @@ type PongDeleteMutation {
 type PongLogType {
   createdDate: DateTime!
   id: Int!
-  remoteIp: String!
+  remoteIp: String
   scheme: String
   requestMethod: String
   userAgent: String
-  body: JSONString!
+  body: JSONString
   exitStatus: Int
+  sslNotBefore: DateTime
+  sslNotAfter: DateTime
+  httpCode: Int
+  icmpStatus: Boolean
   updatedDate: DateTime
 }
 
 input PongMutationInput {
   uuid: String
+  variant: String!
   project: String!
   name: String
   description: String
@@ -288,6 +293,7 @@ type PongMutationPayload {
   uuid: String
   pongId: Int
   url: String
+  variant: String
   project: String
   name: String
   description: String
@@ -316,12 +322,16 @@ type PongType implements Node {
   uuid: UUID!
   pongId: Int!
   project: ProjectType!
+  pongVariant: String!
   name: String!
   slug: String
   paused: Boolean
   period: String
   gracePeriod: String
   channels: [ChannelType]
+  sslUrl: String
+  httpUrl: String
+  pingHostname: String
   logs: [PongLogType]
   id: ID!
   pingUrl: String
@@ -418,7 +428,7 @@ type Query {
   status(id: Int!): StatusType
   statuses(id: Int, pong: String, old: String, new: String, log: String, processed: Boolean): [StatusType!]
   pongLog(id: Int!): PongLogType
-  pongLogs(id: Int, pong: String, remoteIp: String, scheme: String, requestMethod: String, userAgent: String, exitStatus: Int): [PongLogType!]
+  pongLogs(id: Int, pong: String, remoteIp: String, scheme: String, requestMethod: String, userAgent: String, exitStatus: Int, sslNotBefore: DateTime, sslNotAfter: DateTime, httpCode: Int, icmpStatus: Boolean): [PongLogType!]
   transport(id: Int!): TransportType
   transports(name: String, module: String, active: Boolean): [TransportType!]
   channel(id: Int!): ChannelType

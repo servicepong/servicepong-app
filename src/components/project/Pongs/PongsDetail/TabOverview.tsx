@@ -5,7 +5,10 @@ import {
   Box,
   Button,
   Code,
+  FormControl,
+  FormLabel,
   Heading,
+  Input,
   Stack,
   Text,
 } from '@chakra-ui/react';
@@ -95,23 +98,48 @@ const TabOverview: FC<TabOverviewProps> = ({ projectId, pongId }) => {
 
   return (
     <Stack spacing={8}>
-      <Card>
-        <Heading mb={2} as="h2" size="md">
-          How to use this pong?
-        </Heading>
-        <Text mb={2}>
-          Send a request to the following url to test the pong. No matter if
-          GET, POST, … Just try it out.
-        </Text>
-        <Text as="strong">HTTP Request url:</Text>
-        <br />
-        <Code mt={2}>{data?.pong?.pingUrl}</Code>
-        <Box mt={8}>
-          <NextLink href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} passHref>
-            <Button as="a">Learn more</Button>
-          </NextLink>
-        </Box>
-      </Card>
+      {data?.pong?.pongVariant === 'Heartbeat' ? (
+        <Card>
+          <Heading mb={2} as="h2" size="md">
+            How to use this pong?
+          </Heading>
+          <Text mb={2}>
+            Send a request to the following url to test the pong. No matter if
+            GET, POST, … Just try it out.
+          </Text>
+          <Text as="strong">HTTP Request url:</Text>
+          <br />
+          <Code mt={2}>{data?.pong?.pingUrl}</Code>
+          <Box mt={8}>
+            <NextLink href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} passHref>
+              <Button as="a">Learn more</Button>
+            </NextLink>
+          </Box>
+        </Card>
+      ) : data?.pong?.pongVariant === 'SSL' ? (
+        <OverviewVariantItem
+          howToUse="servicepong checks your SSL certificate for the specified domain name."
+          inputLabel="Hostname"
+          inputValue="servicepong.io"
+          inputPlaceholder="servicepong.io"
+        />
+      ) : data?.pong?.pongVariant === 'Icmp' ? (
+        <OverviewVariantItem
+          howToUse="servicepong pings your hostname or IP to verify its uptime."
+          inputLabel="Hostname or IP"
+          inputValue="servicepong.io"
+          inputPlaceholder="servicepong.io"
+        />
+      ) : data?.pong?.pongVariant === 'HTTP' ? (
+        <OverviewVariantItem
+          howToUse="servicepong checks your http/s url for status code `2xx`."
+          inputLabel="URL"
+          inputValue="https://servicepong.io"
+          inputPlaceholder="https://servicepong.io"
+        />
+      ) : (
+        <Card>Invalid variant</Card>
+      )}
 
       <Card>
         <Heading mb={2} as="h2" size="md">
@@ -153,3 +181,48 @@ const TabOverview: FC<TabOverviewProps> = ({ projectId, pongId }) => {
 };
 
 export { TabOverview };
+
+interface OverviewVariantItemProps {
+  howToUse: string;
+  inputLabel: string;
+  inputValue: string;
+  inputPlaceholder: string;
+}
+
+const OverviewVariantItem: FC<OverviewVariantItemProps> = ({
+  howToUse,
+  inputLabel,
+  inputValue,
+  inputPlaceholder,
+}) => (
+  <Card>
+    <Heading mb={2} as="h2" size="md">
+      How to use this pong?
+    </Heading>
+    <Text mb={2}>{howToUse}</Text>
+    <br />
+    <FormControl>
+      <FormLabel>{inputLabel}</FormLabel>
+      <Input
+        value={inputValue}
+        // onChange={(e) => setProjectTitle(e.currentTarget.value)}
+        size="lg"
+        placeholder={inputPlaceholder}
+        variant="filled"
+        type="text"
+      />
+      <Button
+        size="lg"
+        // onClick={() => updatePassword()}
+        // disabled={!(newPassword && newConfirmPassword)}
+      >
+        Save
+      </Button>
+    </FormControl>
+    <Box mt={8}>
+      <NextLink href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} passHref>
+        <Button as="a">Learn more</Button>
+      </NextLink>
+    </Box>
+  </Card>
+);

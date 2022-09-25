@@ -1,7 +1,17 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react';
 import {
   PongsDocument,
   ProjectQuery,
@@ -25,11 +35,13 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
   const { data } = usePongsQuery({ variables: { project: projectId } });
   const [createPongMutation] = useCreatePongMutation();
 
-  const createPong = (type: "ssl" | "http" | "ping" | "heartbeat" = "heartbeat") => {
+  const createPong = (
+    type: 'SSL' | 'HTTP' | 'Icmp' | 'Heartbeat' = 'Heartbeat'
+  ) => {
     createPongMutation({
       variables: {
         project: projectId,
-        // foo: type
+        variant: type,
       },
       refetchQueries: [PongsDocument],
       onError: (error) => {
@@ -76,7 +88,7 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
                   Create pong
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => createPong("ping")}>
+                  <MenuItem onClick={() => createPong('Icmp')}>
                     <Box>
                       <strong>Ping</strong>
                       <br />
@@ -85,7 +97,7 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
                       </Text>
                     </Box>
                   </MenuItem>
-                  <MenuItem onClick={() => createPong("http")}>
+                  <MenuItem onClick={() => createPong('HTTP')}>
                     <Box>
                       <strong>HTTP</strong>
                       <br />
@@ -94,21 +106,23 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
                       </Text>
                     </Box>
                   </MenuItem>
-                  <MenuItem onClick={() => createPong("ssl")}>
+                  <MenuItem onClick={() => createPong('SSL')}>
                     <Box>
                       <strong>SSL</strong>
                       <br />
                       <Text fontSize="xs">
-                        Monitor your cron jobs eg. to ensure the creation of backups
+                        Monitor your cron jobs eg. to ensure the creation of
+                        backups
                       </Text>
                     </Box>
                   </MenuItem>
-                  <MenuItem onClick={() => createPong("heartbeat")}>
+                  <MenuItem onClick={() => createPong('Heartbeat')}>
                     <Box>
                       <strong>Heartbeat</strong>
                       <br />
                       <Text fontSize="xs">
-                        Monitor your cron jobs eg. to ensure the creation of backups
+                        Monitor your cron jobs eg. to ensure the creation of
+                        backups
                       </Text>
                     </Box>
                   </MenuItem>
@@ -132,39 +146,43 @@ const PongsList: FC<PongsListProps> = ({ projectId, project }) => {
                     Create pong
                   </MenuButton>
                   <MenuList>
-                    <MenuItem onClick={() => createPong("ping")}>
+                    <MenuItem onClick={() => createPong('Icmp')}>
                       <Box>
                         <strong>Ping</strong>
                         <br />
                         <Text fontSize="xs">
-                          Monitor your servers to be informed in case of an outage
+                          Monitor your servers to be informed in case of an
+                          outage
                         </Text>
                       </Box>
                     </MenuItem>
-                    <MenuItem onClick={() => createPong("http")}>
+                    <MenuItem onClick={() => createPong('HTTP')}>
                       <Box>
                         <strong>HTTP</strong>
                         <br />
                         <Text fontSize="xs">
-                          Monitor your website to be informed in case of an outage
+                          Monitor your website to be informed in case of an
+                          outage
                         </Text>
                       </Box>
                     </MenuItem>
-                    <MenuItem onClick={() => createPong("ssl")}>
+                    <MenuItem onClick={() => createPong('SSL')}>
                       <Box>
                         <strong>SSL</strong>
                         <br />
                         <Text fontSize="xs">
-                          Monitor your cron jobs eg. to ensure the creation of backups
+                          Monitor your cron jobs eg. to ensure the creation of
+                          backups
                         </Text>
                       </Box>
                     </MenuItem>
-                    <MenuItem onClick={() => createPong("heartbeat")}>
+                    <MenuItem onClick={() => createPong('Heartbeat')}>
                       <Box>
                         <strong>Heartbeat</strong>
                         <br />
                         <Text fontSize="xs">
-                          Monitor your cron jobs eg. to ensure the creation of backups
+                          Monitor your cron jobs eg. to ensure the creation of
+                          backups
                         </Text>
                       </Box>
                     </MenuItem>
